@@ -1,17 +1,12 @@
 package com.gmail;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,28 +34,46 @@ public class ChromeController {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
-    public void getPage(String url) {
+    public void openPage(String url) {
         driver.get(url);
+    }
+
+    public WebElement getElement(String xpath) {
+        WebElement element = null;
+        try {
+            element = driver.findElement(By.xpath(xpath));
+        } catch (StaleElementReferenceException e) {
+            System.out.println(e.getMessage());
+        }
+        return element;
     }
 
     public void setText(String xpath, String text) {
         driver.findElement(By.xpath(xpath)).sendKeys(text);
     }
 
-    public List<WebElement> getCountSearchedIncomingEmails(String xpath) {
+    public List<WebElement> getSearchedIncomingEmails(String xpath) {
         return driver.findElements(By.xpath(xpath));
     }
 
-    public void click(String xpath) {
-        driver.findElement(By.xpath(xpath)).click();
-    }
-
-    public void quit() {
+    public void timeout(int milliseconds) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void click(String xpath) {
+        try {
+            getElement(xpath).click();
+        } catch (StaleElementReferenceException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void quit() {
+        timeout(2500);
         driver.quit();
     }
 }

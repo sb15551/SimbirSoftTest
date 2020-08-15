@@ -7,14 +7,14 @@ import org.openqa.selenium.Keys;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 14.08.2020 0:27
  */
-public class LoginGmail {
+public class LoginPage {
 
     private static final String LOGIN = "//*[@id='identifierId']";
-    private static final String PASSWORD = "//*[@id='password']/div[1]/div/div[1]/input";
+    private static final String PASSWORD = "//*[@id='password']//input";
 
     private ChromeController controller;
 
-    public LoginGmail(ChromeController controller) {
+    public LoginPage(ChromeController controller) {
         this.controller = controller;
     }
 

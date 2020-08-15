@@ -3,11 +3,6 @@ package com.gmail;
 import io.qameta.allure.Description;
 import io.qameta.allure.Story;
 import junit.framework.TestCase;
-import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -21,29 +16,33 @@ public class GmailTest extends TestCase {
     private static final String THEME = "Тестовое задание. Surkov";
 
     private ChromeController controller;
-    private LoginGmail loginGmail;
-    private EmailSender emailSender;
+    private LoginPage loginPage;
+    private EmailPage emailPage;
 
     @Description("Open browser")
     @Override
     protected void setUp() throws Exception {
         controller = new ChromeController();
         controller.start();
-        loginGmail = new LoginGmail(controller);
-        controller.getPage(BASE_URL);
-        emailSender = new EmailSender(controller);
+        loginPage = new LoginPage(controller);
+        controller.openPage(BASE_URL);
+        emailPage = new EmailPage(controller);
     }
 
     @Description("Login")
     @Story("Enter login and password")
     public void testSendEmail() {
-        loginGmail.loginToEmail(TEST_GMAIL_COM, TEST_PASSWORD);
-        emailSender.createEmail(ADDRESS, THEME);
+        loginPage.loginToEmail(TEST_GMAIL_COM, TEST_PASSWORD);
+        emailPage.createAndSendEmail(
+                ADDRESS,
+                THEME,
+                "Amount test emails: " + emailPage.getCountSearchedIncomingEmails(ADDRESS)
+        );
     }
 
     @Description("Close browser")
     @Override
-    protected void tearDown() throws Exception {
+    protected void tearDown() {
         controller.quit();
     }
 }
